@@ -12,7 +12,7 @@ import asyncio
 import logging
 import sys
 
-from discord_lyrics.config import Config
+from discord_lyrics.config import Config, ensure_config_exists, save_token
 
 
 def _force_utf8() -> None:
@@ -32,9 +32,17 @@ def main() -> None:
         datefmt="%H:%M:%S",
     )
 
+    ensure_config_exists()  # create config.json from the example on first run
     cfg = Config.load()
 
     if "--cli" in sys.argv:
+        if not cfg.has_token():
+            token = input("Paste your Discord token: ").strip()
+            if not token:
+                print("No token provided. Exiting.")
+                sys.exit(1)
+            save_token(token)
+            cfg = Config.load()
         from discord_lyrics.app import run
         try:
             asyncio.run(run(cfg))

@@ -1,4 +1,9 @@
-"""Desktop GUI (customtkinter): a Spotify-style "now playing + lyrics" window."""
+"""Desktop GUI (customtkinter): a Spotify-style "now playing + lyrics" window.
+
+A single window switches between two views:
+  * a first-run setup screen (paste your Discord token), and
+  * the player screen (album art, progress bar, synced lyrics).
+"""
 
 from __future__ import annotations
 
@@ -11,7 +16,7 @@ import customtkinter as ctk
 from PIL import Image, ImageDraw
 
 from . import worker
-from .config import Config
+from .config import Config, save_token
 from .state import PlayerState
 
 # Palette
@@ -82,26 +87,90 @@ class WorkerThread(threading.Thread):
 class LyricsApp(ctk.CTk):
     ART = 240
 
-    def __init__(self, cfg: Config, state: PlayerState, worker_thread: WorkerThread) -> None:
+    def __init__(self, cfg: Config) -> None:
         super().__init__()
         self.cfg = cfg
-        self.player = state  # NOTE: don't use self.state — Tk reserves .state()
-        self.worker = worker_thread
+        self.player: Optional[PlayerState] = None
+        self.worker: Optional[WorkerThread] = None
         self._art_token = -1
 
         self.title("Discord Lyrics Status")
-        self.geometry("470x680")
-        self.minsize(430, 620)
         self.configure(fg_color=BG)
+        self.grid_columnconfigure(0, weight=1)
 
         self._ph_image = ctk.CTkImage(_placeholder(self.ART), size=(self.ART, self.ART))
-        self._build()
         self.protocol("WM_DELETE_WINDOW", self._on_close)
+
+        if self.cfg.has_token():
+            self._start_player()
+        else:
+            self._show_setup()
+
+    # ------------------------------------------------------------------ setup
+    def _show_setup(self) -> None:
+        self.geometry("480x340")
+        self.resizable(False, False)
+        self.grid_rowconfigure(0, weight=1)
+
+        f = ctk.CTkFrame(self, fg_color=BG)
+        f.grid(row=0, column=0, sticky="nsew")
+        f.grid_columnconfigure(0, weight=1)
+        self.setup_frame = f
+
+        ctk.CTkLabel(
+            f, text="🎵  Bem-vindo!", font=ctk.CTkFont(size=24, weight="bold"), text_color=TEXT
+        ).grid(row=0, column=0, pady=(32, 4), padx=24)
+        ctk.CTkLabel(
+            f, text="Cole o seu token do Discord para começar.",
+            font=ctk.CTkFont(size=13), text_color=SUB, wraplength=400,
+        ).grid(row=1, column=0, pady=(0, 20), padx=24)
+
+        self.token_entry = ctk.CTkEntry(
+            f, width=400, height=42, show="•", placeholder_text="seu token do Discord",
+            fg_color=CARD, border_color=ACCENT,
+        )
+        self.token_entry.grid(row=2, column=0, padx=24)
+        self.token_entry.bind("<Return>", lambda _e: self._save_token())
+        self.token_entry.focus()
+
+        self.setup_error = ctk.CTkLabel(f, text="", font=ctk.CTkFont(size=11), text_color=ERR)
+        self.setup_error.grid(row=3, column=0, pady=(8, 0))
+
+        ctk.CTkButton(
+            f, text="Salvar e iniciar", height=42, width=220,
+            fg_color=ACCENT, hover_color="#6a3fd6", font=ctk.CTkFont(size=14, weight="bold"),
+            command=self._save_token,
+        ).grid(row=4, column=0, pady=(16, 6))
+        ctk.CTkLabel(
+            f, text="🔒 O token fica salvo só no seu PC (config.json), nunca é enviado.",
+            font=ctk.CTkFont(size=10), text_color=SUB, wraplength=420,
+        ).grid(row=5, column=0, pady=(0, 18), padx=24)
+
+    def _save_token(self) -> None:
+        token = self.token_entry.get().strip()
+        if len(token) < 20:
+            self.setup_error.configure(text="Token inválido — cole o token completo.")
+            return
+        save_token(token)
+        self.cfg = Config.load()
+        self.setup_frame.destroy()
+        self._start_player()
+
+    # ----------------------------------------------------------------- player
+    def _start_player(self) -> None:
+        self.resizable(True, True)
+        self.geometry("470x680")
+        self.minsize(430, 620)
+        self.grid_rowconfigure(0, weight=0)
+
+        self.player = PlayerState()
+        self.worker = WorkerThread(self.cfg, self.player)
+        self.worker.start()
+
+        self._build()
         self.after(120, self._tick)
 
     def _build(self) -> None:
-        self.grid_columnconfigure(0, weight=1)
-
         self.art_label = ctk.CTkLabel(self, text="", image=self._ph_image, fg_color="transparent")
         self.art_label.grid(row=0, column=0, pady=(30, 18))
 
@@ -111,9 +180,7 @@ class LyricsApp(ctk.CTk):
         )
         self.title_label.grid(row=1, column=0, padx=24)
 
-        self.artist_label = ctk.CTkLabel(
-            self, text="", font=ctk.CTkFont(size=14), text_color=SUB,
-        )
+        self.artist_label = ctk.CTkLabel(self, text="", font=ctk.CTkFont(size=14), text_color=SUB)
         self.artist_label.grid(row=2, column=0, pady=(2, 18))
 
         prog = ctk.CTkFrame(self, fg_color="transparent")
@@ -163,10 +230,9 @@ class LyricsApp(ctk.CTk):
                 img = _rounded(Image.open(io.BytesIO(data)), self.ART) if data else None
             except Exception:
                 img = None
-            if img is not None:
-                self.art_label.configure(image=ctk.CTkImage(img, size=(self.ART, self.ART)))
-            else:
-                self.art_label.configure(image=self._ph_image)
+            self.art_label.configure(
+                image=ctk.CTkImage(img, size=(self.ART, self.ART)) if img else self._ph_image
+            )
 
         playing = bool(s.get("playing"))
         self.title_label.configure(text=s.get("title") or "Nada tocando")
@@ -199,19 +265,17 @@ class LyricsApp(ctk.CTk):
         self.after(120, self._tick)
 
     def _on_close(self) -> None:
-        self.footer.configure(text="encerrando…")
-        self.worker.stop()
+        if self.worker is not None:
+            try:
+                self.footer.configure(text="encerrando…")
+            except Exception:
+                pass
+            self.worker.stop()
         self.after(200, self.destroy)
 
 
 def launch(cfg: Config) -> None:
-    cfg.validate()
     ctk.set_appearance_mode("dark")
     ctk.set_widget_scaling(1.0)
-
-    state = PlayerState()
-    worker_thread = WorkerThread(cfg, state)
-    worker_thread.start()
-
-    app = LyricsApp(cfg, state, worker_thread)
+    app = LyricsApp(cfg)
     app.mainloop()

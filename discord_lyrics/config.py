@@ -17,6 +17,33 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 CONFIG_PATH = ROOT / "config.json"
+EXAMPLE_PATH = ROOT / "config.example.json"
+
+PLACEHOLDER_TOKEN = "PUT_YOUR_DISCORD_TOKEN_HERE"
+
+
+def ensure_config_exists() -> None:
+    """Create config.json from the example on first run, so every user has one."""
+    if CONFIG_PATH.exists():
+        return
+    if EXAMPLE_PATH.exists():
+        CONFIG_PATH.write_text(EXAMPLE_PATH.read_text(encoding="utf-8"), encoding="utf-8")
+
+
+def save_token(token: str) -> None:
+    """Write the token into config.json (creating it from the example if needed)."""
+    data: dict = {}
+    for path in (CONFIG_PATH, EXAMPLE_PATH):
+        if path.exists():
+            try:
+                data = json.loads(path.read_text(encoding="utf-8"))
+                break
+            except json.JSONDecodeError:
+                data = {}
+    data["token"] = token.strip()
+    CONFIG_PATH.write_text(
+        json.dumps(data, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    )
 
 
 @dataclass
@@ -63,9 +90,11 @@ class Config:
         cfg.token = (cfg.token or "").strip()
         return cfg
 
+    def has_token(self) -> bool:
+        return self.token not in ("", PLACEHOLDER_TOKEN)
+
     def validate(self) -> None:
-        placeholder = {"", "PUT_YOUR_DISCORD_TOKEN_HERE"}
-        if self.token in placeholder:
+        if not self.has_token():
             raise SystemExit(
                 "No Discord token configured.\n"
                 "  -> Copy config.example.json to config.json and paste your token, or\n"
