@@ -3,3 +3,10 @@
 *.py text eol=lf
 *.md text eol=lf
 *.json text eol=lf
+
+# Binary assets — never touch line endings.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary

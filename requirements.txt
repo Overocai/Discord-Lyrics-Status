@@ -1,6 +1,9 @@
 requests>=2.31
 syncedlyrics>=1.0
 rich>=13.7
+customtkinter>=5.2
+Pillow>=10.0
 winrt-runtime>=2.0
 winrt-Windows.Foundation>=2.0
 winrt-Windows.Media.Control>=2.0
+winrt-Windows.Storage.Streams>=2.0

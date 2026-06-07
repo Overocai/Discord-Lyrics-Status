@@ -58,7 +58,12 @@ async def run(cfg: Config) -> None:
     last_status: Optional[str] = ""  # "" forces the first real update through
 
     try:
-        with Live(console=console, refresh_per_second=8, screen=False) as live:
+        with Live(
+            console=console,
+            refresh_per_second=8,
+            screen=True,
+            transient=True,
+        ) as live:
             while True:
                 np = await get_now_playing()
 
@@ -72,12 +77,14 @@ async def run(cfg: Config) -> None:
                             title=np.title if np else "",
                             artist=np.artist if np else "",
                             position=np.position if np else 0.0,
+                            duration=np.duration if np else 0.0,
                             playing=False,
                             prev_line=None,
                             current_line=None,
                             next_line=None,
                             has_lyrics=bool(lyrics),
                             status_text=None,
+                            max_width=console.size.width,
                         )
                     )
                     await asyncio.sleep(1.0)
@@ -111,12 +118,14 @@ async def run(cfg: Config) -> None:
                         title=np.title,
                         artist=np.artist,
                         position=np.position,
+                        duration=np.duration,
                         playing=True,
                         prev_line=clean_line(prev),
                         current_line=current,
                         next_line=clean_line(nxt),
                         has_lyrics=bool(lyrics),
                         status_text=desired,
+                        max_width=console.size.width,
                     )
                 )
 

@@ -25,23 +25,40 @@ log = logging.getLogger(__name__)
 CACHE_DIR = ROOT / ".cache" / "lyrics"
 _TIMESTAMP = re.compile(r"\[(\d+):(\d+(?:\.\d+)?)\]")
 
-# Qualifiers that pollute lyric searches (e.g. "Song - Single Version").
+# Release qualifiers that pollute lyric searches (e.g. "Song - Single Version").
 _NOISE = (
     r"remaster(?:ed)?|single version|album version|radio edit|mono|stereo|"
     r"deluxe|bonus|anniversary|expanded|re-?recorded|taylor'?s version|"
     r"\d{4}\s*remaster|live|acoustic|version|edit|remix"
 )
-_PAREN_NOISE = re.compile(r"\s*[\(\[][^)\]]*\b(?:" + _NOISE + r")\b[^)\]]*[)\]]", re.I)
+# YouTube-style tags (incl. Portuguese) that should always be removed.
+_MEDIA_TAGS = (
+    r"official(?:\s+(?:music\s+)?video|\s+audio|\s+lyric\s+video)?|"
+    r"music\s+video|lyrics?|lyric\s+video|visuali[sz]er|mv|hd|hq|4k|8k|"
+    r"explicit|clean|color\s*coded|legendado|legendada|tradu[çc][ãa]o|"
+    r"oficial|v[ií]deo\s*oficial|[aá]udio|ao\s+vivo|clipe(?:\s+oficial)?"
+)
+_PAREN_NOISE = re.compile(
+    r"\s*[\(\[][^)\]]*\b(?:" + _NOISE + r"|" + _MEDIA_TAGS + r")\b[^)\]]*[)\]]", re.I
+)
 _DASH_NOISE = re.compile(r"\s*-\s*[^-]*\b(?:" + _NOISE + r")\b.*$", re.I)
 _FEAT = re.compile(r"\s*[\(\[]?\s*\b(?:feat\.?|ft\.?|featuring)\b[^)\]]*[)\]]?", re.I)
+_TRAIL_TAGS = re.compile(r"\s*[\(\[][^)\]]*[)\]]\s*$")  # leftover empty-ish trailers
 
 
 def clean_title(title: str) -> str:
-    """Strip release qualifiers/features so searches match better."""
+    """Strip release/YouTube qualifiers and features so searches match better."""
     text = _PAREN_NOISE.sub("", title or "")
     text = _DASH_NOISE.sub("", text)
     text = _FEAT.sub("", text)
     return re.sub(r"\s+", " ", text).strip(" -").strip()
+
+
+def clean_artist(artist: str) -> str:
+    """Drop YouTube channel suffixes like ' - Topic' and trailing 'VEVO'."""
+    text = re.sub(r"\s*-\s*topic\s*$", "", artist or "", flags=re.I)
+    text = re.sub(r"\s*vevo\s*$", "", text, flags=re.I)
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def _cache_path(query: str) -> Path:
@@ -63,7 +80,7 @@ def fetch_lrc(
     """
     # syncedlyrics iterates over `providers`, so it must be a list, never None.
     provider_list = list(providers) if providers else []
-    artist = (artist or "").strip()
+    artist = clean_artist(artist)
     clean = clean_title(title)
 
     queries: List[str] = []

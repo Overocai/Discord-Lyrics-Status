@@ -1,69 +1,83 @@
 # 🎵 Discord Lyrics Status
 
-Turn your Discord **custom status** into a live, line-by-line lyrics display of
-whatever you're listening to. The app reads the song from the Windows media
-session (Spotify, browser, Groove…), fetches time-synced lyrics, and updates
-your status in real time as the song plays.
+> **English** · [Português 🇧🇷](README.pt-BR.md)
 
-```
-╭───────────────────────── Discord Lyrics Status ─────────────────────────╮
-│                                                                          │
-│    Song    Bohemian Rhapsody                                             │
-│  Artist    Queen                                                         │
-│    Time    01:42  ───────────●··············                            │
-│                                                                          │
-│  Is this the real life?                                                  │
-│  ➤ Is this just fantasy?                                                 │
-│  Caught in a landslide                                                   │
-│                                                                          │
-│  Status  🎵 Is this just fantasy?                                        │
-╰──────────────────────── yourname · Ctrl+C to quit ──────────────────────╯
-```
+Turn your Discord **custom status** into a live, line-by-line lyrics display of
+whatever you're listening to — with a clean desktop app that shows the **album
+art**, the song, a **progress bar**, and the lyrics scrolling in real time.
+
+It reads the song straight from Windows' "now playing" (the same overlay you get
+with the volume keys), so it works with **Spotify, YouTube, browsers and more —
+no Spotify API or developer keys required.**
+
+<p align="center">
+  <img src="assets/screenshot.png" alt="Discord Lyrics Status app showing album art, song info, a progress bar and synced lyrics, with the matching Discord custom status on the left" width="480">
+</p>
 
 ---
 
-## ✨ What's improved over similar scripts
+## 🖥️ The interface
 
+The desktop window (built with `customtkinter`) is a Spotify-style "now playing"
+card:
+
+- 🖼️ **Album art** — pulled directly from Windows, rounded corners.
+- 🎵 **Song title & artist** of the current track.
+- 📊 **Progress bar** with elapsed time and total duration.
+- 🎤 **Synced lyrics** in the center — the **current line is highlighted in
+  cyan**, with the previous and next lines dimmed above and below.
+- 🟢 **Footer** showing the exact text currently set as your Discord status and
+  which account you're connected as.
+
+Everything updates automatically as the song plays, and your Discord status
+follows along line by line.
+
+> Prefer the terminal? Run `python main.py --cli` for a `rich` text dashboard.
+
+---
+
+## ✨ Features
+
+- **Live lyrics → Discord status**, line by line.
+- **Modern GUI** with album art, progress bar and highlighted current line.
+- **Works with any player** that shows in Windows media controls (Spotify,
+  YouTube in a browser, Groove, etc.) — **no Spotify API needed**.
+- **Smart YouTube handling** — strips junk like `(Official Video)`,
+  `(Clipe Oficial)`, `(Lyrics)`, `[HD]`, `- Topic`, `VEVO` before searching.
+- **Accurate sync** — handles multiple timestamps per LRC line via binary search.
+- **Lyrics cached to disk** so each song is only looked up once.
+- **Rate-limit aware** — respects Discord's `429` responses.
 - **Token kept out of the source** — loaded from `config.json` (git-ignored) or
-  the `DISCORD_TOKEN` env var, so you can publish the repo safely.
-- **Token validated on startup** with a clear error instead of silent failure.
-- **Rate-limit aware** — respects Discord `429` responses with a cooldown and
-  reuses a single keep-alive HTTP session.
-- **Lyrics cached to disk** (`.cache/`) — each song is only looked up once.
-- **Accurate line sync** — handles multiple timestamps per LRC line and uses a
-  binary search; shows previous / current / next lines.
-- **Graceful fallback** — when no synced lyrics exist, shows `Title — Artist`.
-- **Clean modular code** with a `rich` terminal dashboard.
+  the `DISCORD_TOKEN` env var, so the repo is safe to publish.
 
 ---
 
 ## ⚠️ Disclaimer
 
-This tool automates actions on a **user account** (a "selfbot"), which is
-**against Discord's Terms of Service**. It only changes *your own* custom status
-and doesn't touch servers or other users, but using it could in theory get your
-account actioned. **Use it at your own risk on an account you're willing to
-lose.** This project is for educational purposes.
+This tool automates a **user account** (a "selfbot"), which is **against
+Discord's Terms of Service**. It only changes *your own* custom status and never
+touches servers or other users, but using it could in theory get your account
+actioned. **Use at your own risk on an account you're willing to lose.** This
+project is for educational purposes.
 
 ---
 
 ## 📦 Requirements
 
-- **Windows 10 / 11** (relies on the Windows media-control API)
+- **Windows 10 / 11** (uses the Windows media-control API)
 - **Python 3.9+**
 - A Discord **user token**
 
 ## 🚀 Setup
 
 ```bash
-git clone https://github.com/<your-username>/Discord-Lyrics-Status.git
+git clone https://github.com/Overocai/Discord-Lyrics-Status.git
 cd Discord-Lyrics-Status
 
 pip install -r requirements.txt
 
 # create your private config from the template
 copy config.example.json config.json   # Windows
-# cp config.example.json config.json    # macOS/Linux
 ```
 
 Open `config.json` and paste your token into `"token"`, **or** set an
@@ -76,11 +90,12 @@ $env:DISCORD_TOKEN = "your_token_here"
 Then run it:
 
 ```bash
-python main.py
+python main.py            # graphical interface (default)
+python main.py --cli      # terminal dashboard
 ```
 
-Play a song and your status starts updating automatically. Press **Ctrl+C** to
-stop — your status is cleared on exit.
+Play a song and the window comes alive — your Discord status updates
+automatically. Close the window (or press Ctrl+C in CLI mode) to clear it.
 
 ## ⚙️ Configuration (`config.json`)
 
@@ -88,7 +103,7 @@ stop — your status is cleared on exit.
 |-----|---------|-------------|
 | `token` | `""` | Discord user token (env var `DISCORD_TOKEN` overrides this). |
 | `status_prefix` | `"🎵 "` | Text placed before every lyric line. |
-| `emoji_name` | `""` | Optional emoji shown next to the status (e.g. `"🎧"`). |
+| `emoji_name` | `""` | Optional emoji shown next to the status. |
 | `poll_interval` | `0.3` | Seconds between media checks. |
 | `line_lead` | `0.4` | Show each line slightly early to offset API latency. |
 | `max_status_length` | `128` | Discord's hard limit for status text. |
@@ -101,27 +116,28 @@ stop — your status is cleared on exit.
 ## 🧠 How it works
 
 ```
-Windows Media API ──> media.py     (what song, what position)
+Windows Media API ──> media.py     (song, position, duration, album art)
 syncedlyrics      ──> lyrics.py    (download + cache + parse LRC, find line)
-                       app.py      (loop: pick current line each tick)
+                       worker.py    (background loop, updates shared state)
 Discord REST API  <── discord_client.py  (set custom status, rate-limited)
-rich              <── ui.py        (terminal dashboard)
+customtkinter     <── gui.py        (desktop window)  |  rich -> app.py (CLI)
 ```
 
 ## 🔑 Getting your token
 
-You'll find guides online for extracting your Discord user token from the
-client/DevTools. **Never share it** — anyone with your token has full access to
-your account. This repo's `.gitignore` already excludes `config.json` to help
-prevent accidental leaks.
+In your browser, open Discord, press **F12 → Network**, do any action (e.g. send
+a message), click a request and copy the **`authorization`** header value.
+**Never share your token** — anyone with it has full access to your account. This
+repo's `.gitignore` already excludes `config.json` to prevent accidental leaks.
 
 ## 🛠️ Troubleshooting
 
-- **`Invalid Discord token (401)`** — token is wrong/expired; grab a fresh one.
-- **No lyrics shown** — the song may not have synced lyrics; it'll fall back to
-  the title. Delete `.cache/` to force a re-lookup.
-- **Status not updating** — make sure the music is actually *playing* (not
-  paused) and that Windows shows it in the media overlay (Win key + volume).
+- **`Invalid Discord token (401)`** — the token is wrong/expired; grab a new one.
+- **No lyrics** — the track may not have synced lyrics (it falls back to the
+  title). Delete `.cache/` to force a re-lookup.
+- **Wrong song detected** — if Spotify *and* a YouTube tab play at once, Windows
+  reports the most recent session. Pause the one you don't want.
+- **Lyrics slightly off** — tweak `line_lead` in `config.json`.
 
 ## 👤 Author
 
@@ -130,6 +146,3 @@ Made by **overocai** — [Discord](https://discord.com/users/1288832011452153910
 ## 📄 License
 
 MIT © overocai — see [LICENSE](LICENSE).
-
-*Inspired by community "lyrics-to-status" scripts, rewritten for safer config,
-caching, rate-limit handling and a cleaner codebase.*
