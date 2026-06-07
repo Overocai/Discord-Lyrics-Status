@@ -1,0 +1,6 @@
+requests>=2.31
+syncedlyrics>=1.0
+rich>=13.7
+winrt-runtime>=2.0
+winrt-Windows.Foundation>=2.0
+winrt-Windows.Media.Control>=2.0

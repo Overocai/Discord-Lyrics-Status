@@ -1,0 +1,13 @@
+{
+  "token": "PUT_YOUR_DISCORD_TOKEN_HERE",
+  "status_prefix": "🎵 ",
+  "emoji_name": "",
+  "poll_interval": 0.3,
+  "line_lead": 0.4,
+  "max_status_length": 128,
+  "show_song_when_no_lyrics": true,
+  "clear_on_pause": true,
+  "cache_lyrics": true,
+  "synced_only": true,
+  "providers": []
+}
