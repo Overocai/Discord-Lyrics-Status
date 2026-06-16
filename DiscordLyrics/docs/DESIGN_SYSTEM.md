@@ -1,33 +1,38 @@
 # Design System
 
-A dark, high-contrast system built around **deep black, graphite, and premium
-red**. Defined as WPF resource dictionaries in `Themes/` and consumed via
-`StaticResource` / `DynamicResource`.
+A dark, high-contrast system matching **Discord's dark theme**: graphite grays
+with a **blurple** accent. Defined as WPF resource dictionaries in `Themes/` and
+consumed via `StaticResource` / `DynamicResource`.
+
+> Note: the accent token keys keep the historical `Red` names (e.g. `Brush.Red`)
+> so the whole UI re-themes from one file — but the *values* are Discord blurple.
 
 ## Color tokens (`Themes/Colors.xaml`)
 
 | Token | Hex | Use |
 |---|---|---|
-| `Color.Black` | `#07080A` | Window background |
-| `Color.Sidebar` | `#0D0E12` | Navigation rail |
-| `Color.Surface` | `#131419` | Content background |
-| `Color.SurfaceAlt` | `#191B21` | Inputs, insets |
-| `Color.Card` | `#1E2027` | Cards / panels |
-| `Color.CardHover` | `#24262F` | Hover state |
-| `Color.Border` | `#2A2C35` | 1px separators |
-| `Color.Graphite` | `#34363F` | Disabled / tracks |
-| `Color.TextPrimary` | `#F3F4F6` | Headings, key text |
-| `Color.TextSecondary` | `#A0A3AD` | Body |
-| `Color.TextMuted` | `#6A6D78` | Captions, labels |
-| `Color.Red` | `#E5383B` | **Primary accent** |
-| `Color.RedHover` | `#FF4A4E` | Accent hover |
-| `Color.RedPressed` | `#C42B2E` | Accent pressed |
-| `Color.RedDark` | `#9E1B1F` | Badges / highlights |
-| `Color.RedDeep` | `#6E1215` | Gradient end |
-| `Color.Success` / `Warning` / `Danger` | green / amber / red | Semantic |
+| `Color.Black` | `#1E1F22` | Window / title bar |
+| `Color.Sidebar` | `#2B2D31` | Navigation rail |
+| `Color.Surface` | `#313338` | Content background |
+| `Color.SurfaceAlt` | `#383A40` | Inputs, insets |
+| `Color.Card` | `#2B2D31` | Cards / panels |
+| `Color.CardHover` | `#35373C` | Hover state |
+| `Color.Border` | `#3F4147` | 1px separators |
+| `Color.Graphite` | `#4E5058` | Disabled / tracks |
+| `Color.TextPrimary` | `#F2F3F5` | Headings, key text |
+| `Color.TextSecondary` | `#B5BAC1` | Body |
+| `Color.TextMuted` | `#80848E` | Captions, labels |
+| `Color.Red` (accent) | `#5865F2` | **Primary accent — blurple** |
+| `Color.RedHover` | `#4752C4` | Accent hover |
+| `Color.RedPressed` | `#3C45A5` | Accent pressed |
+| `Color.RedDark` | `#4752C4` | Badges / highlights |
+| `Color.RedDeep` | `#3C45A5` | Gradient end |
+| `Color.Success` | `#23A55A` | Online / success |
+| `Color.Warning` | `#F0B232` | Warning |
+| `Color.Danger` | `#DA373C` | Danger / close button |
 
-Two signature brushes: `Brush.RedGradient` (the brand mark + accents) and
-`Brush.SurfaceGradient` (album-art placeholder, installer sidebar).
+Two signature brushes: `Brush.RedGradient` (blurple — the brand mark + accents)
+and `Brush.SurfaceGradient` (album-art placeholder, installer sidebar).
 
 ## Typography (`Themes/Typography.xaml`)
 
@@ -67,6 +72,6 @@ for UI chrome. Brand mark is the red-gradient tile with a music note (see `Asset
 ## Principles
 
 1. **No emojis in the UI.** Status text may contain a user-chosen prefix only.
-2. **One accent.** Red is the only chromatic color; everything else is neutral.
+2. **One accent.** Blurple is the only chromatic color; everything else is neutral (red is reserved for the close button / danger).
 3. **Depth via elevation, not shadow noise** — surfaces step lighter as they rise.
 4. **Generous radius** (10–14px) for a modern, product feel.

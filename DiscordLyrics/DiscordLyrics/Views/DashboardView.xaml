@@ -100,17 +100,28 @@
             </Grid>
 
             <!-- Lyrics -->
-            <Border Style="{StaticResource Card}" Margin="0,18,0,0" Padding="26">
-                <StackPanel>
-                    <TextBlock Text="LYRICS" Style="{StaticResource Text.SectionLabel}" />
-                    <TextBlock Text="{Binding PrevLine}" Style="{StaticResource Text.Body}"
-                               TextAlignment="Center" Margin="0,14,0,0" Opacity="0.5" />
-                    <TextBlock Text="{Binding CurrentLine}" TextAlignment="Center" TextWrapping="Wrap"
-                               FontSize="24" FontWeight="Bold" Margin="0,8"
-                               Foreground="{StaticResource Brush.Red}" />
-                    <TextBlock Text="{Binding NextLine}" Style="{StaticResource Text.Body}"
-                               TextAlignment="Center" Opacity="0.5" />
-                </StackPanel>
+            <Border Style="{StaticResource Card}" Margin="0,18,0,0" Padding="26" MinHeight="150">
+                <Grid>
+                    <TextBlock Text="LYRICS" Style="{StaticResource Text.SectionLabel}"
+                               VerticalAlignment="Top" HorizontalAlignment="Left" />
+
+                    <!-- Empty / no-lyrics state -->
+                    <TextBlock Text="{Binding LyricsHint}" Style="{StaticResource Text.Body}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Visibility="{Binding HasLyrics, Converter={StaticResource InverseBoolToVis}}" />
+
+                    <!-- Synced lyrics -->
+                    <StackPanel VerticalAlignment="Center"
+                                Visibility="{Binding HasLyrics, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="{Binding PrevLine}" Style="{StaticResource Text.Body}"
+                                   TextAlignment="Center" Opacity="0.5" />
+                        <TextBlock Text="{Binding CurrentLine}" TextAlignment="Center" TextWrapping="Wrap"
+                                   FontSize="24" FontWeight="Bold" Margin="0,8"
+                                   Foreground="{StaticResource Brush.Red}" />
+                        <TextBlock Text="{Binding NextLine}" Style="{StaticResource Text.Body}"
+                                   TextAlignment="Center" Opacity="0.5" />
+                    </StackPanel>
+                </Grid>
             </Border>
 
             <!-- Footer stat -->

@@ -26,6 +26,7 @@ public sealed partial class DashboardViewModel : ObservableObject, IActivatable
     [ObservableProperty] private string _currentLine = string.Empty;
     [ObservableProperty] private string _nextLine = string.Empty;
     [ObservableProperty] private bool _hasLyrics;
+    [ObservableProperty] private string _lyricsHint = "Start the engine to see lyrics here.";
     [ObservableProperty] private bool _isPlaying;
     [ObservableProperty] private string _statusText = string.Empty;
     [ObservableProperty] private bool _connected;
@@ -100,6 +101,9 @@ public sealed partial class DashboardViewModel : ObservableObject, IActivatable
             PrevLine = _engine.PrevLine;
             CurrentLine = _engine.CurrentLine;
             NextLine = _engine.NextLine;
+            LyricsHint = _engine.Running
+                ? (np.HasTrack ? "No synced lyrics found for this track." : "Play something to begin.")
+                : "Start the engine to see lyrics here.";
             StatusText = _engine.StatusText ?? string.Empty;
             EngineRunning = _engine.Running;
             OnPropertyChanged(nameof(ToggleLabel));

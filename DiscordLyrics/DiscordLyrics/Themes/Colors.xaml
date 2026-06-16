@@ -3,35 +3,37 @@
 
     <!-- ============================================================
          DISCORD LYRICS — DESIGN SYSTEM / COLOR TOKENS
-         Deep black · graphite gray · premium red · dark red accents
+         Discord dark theme: graphite grays + blurple accent
+         (Accent keys keep the historical "Red" names so every view
+          updates from one place; the values are Discord blurple.)
          ============================================================ -->
 
-    <!-- Surfaces (darkest -> lightest) -->
-    <Color x:Key="Color.Black">#FF07080A</Color>
-    <Color x:Key="Color.Sidebar">#FF0D0E12</Color>
-    <Color x:Key="Color.Surface">#FF131419</Color>
-    <Color x:Key="Color.SurfaceAlt">#FF191B21</Color>
-    <Color x:Key="Color.Card">#FF1E2027</Color>
-    <Color x:Key="Color.CardHover">#FF24262F</Color>
-    <Color x:Key="Color.Border">#FF2A2C35</Color>
-    <Color x:Key="Color.Graphite">#FF34363F</Color>
+    <!-- Surfaces (darkest -> lightest) — Discord dark palette -->
+    <Color x:Key="Color.Black">#FF1E1F22</Color>      <!-- window / title bar -->
+    <Color x:Key="Color.Sidebar">#FF2B2D31</Color>    <!-- navigation rail -->
+    <Color x:Key="Color.Surface">#FF313338</Color>    <!-- content area -->
+    <Color x:Key="Color.SurfaceAlt">#FF383A40</Color> <!-- inputs / insets -->
+    <Color x:Key="Color.Card">#FF2B2D31</Color>       <!-- cards / panels -->
+    <Color x:Key="Color.CardHover">#FF35373C</Color>  <!-- hover -->
+    <Color x:Key="Color.Border">#FF3F4147</Color>     <!-- separators -->
+    <Color x:Key="Color.Graphite">#FF4E5058</Color>   <!-- disabled / tracks -->
 
     <!-- Text -->
-    <Color x:Key="Color.TextPrimary">#FFF3F4F6</Color>
-    <Color x:Key="Color.TextSecondary">#FFA0A3AD</Color>
-    <Color x:Key="Color.TextMuted">#FF6A6D78</Color>
+    <Color x:Key="Color.TextPrimary">#FFF2F3F5</Color>
+    <Color x:Key="Color.TextSecondary">#FFB5BAC1</Color>
+    <Color x:Key="Color.TextMuted">#FF80848E</Color>
 
-    <!-- Brand red -->
-    <Color x:Key="Color.Red">#FFE5383B</Color>
-    <Color x:Key="Color.RedHover">#FFFF4A4E</Color>
-    <Color x:Key="Color.RedPressed">#FFC42B2E</Color>
-    <Color x:Key="Color.RedDark">#FF9E1B1F</Color>
-    <Color x:Key="Color.RedDeep">#FF6E1215</Color>
+    <!-- Accent — Discord blurple -->
+    <Color x:Key="Color.Red">#FF5865F2</Color>
+    <Color x:Key="Color.RedHover">#FF4752C4</Color>
+    <Color x:Key="Color.RedPressed">#FF3C45A5</Color>
+    <Color x:Key="Color.RedDark">#FF4752C4</Color>
+    <Color x:Key="Color.RedDeep">#FF3C45A5</Color>
 
-    <!-- Semantic -->
-    <Color x:Key="Color.Success">#FF3BA55D</Color>
-    <Color x:Key="Color.Warning">#FFE0A106</Color>
-    <Color x:Key="Color.Danger">#FFE5383B</Color>
+    <!-- Semantic — Discord -->
+    <Color x:Key="Color.Success">#FF23A55A</Color>
+    <Color x:Key="Color.Warning">#FFF0B232</Color>
+    <Color x:Key="Color.Danger">#FFDA373C</Color>
 
     <!-- ============================================================
          BRUSHES
@@ -58,16 +60,16 @@
     <SolidColorBrush x:Key="Brush.Warning" Color="{StaticResource Color.Warning}" />
     <SolidColorBrush x:Key="Brush.Danger"  Color="{StaticResource Color.Danger}" />
 
-    <!-- Signature gradient (premium red, used for accents and the brand mark) -->
+    <!-- Signature gradient (blurple) — brand mark and accents -->
     <LinearGradientBrush x:Key="Brush.RedGradient" StartPoint="0,0" EndPoint="1,1">
-        <GradientStop Color="#FFFF4A4E" Offset="0" />
-        <GradientStop Color="#FFE5383B" Offset="0.5" />
-        <GradientStop Color="#FF8E171B" Offset="1" />
+        <GradientStop Color="#FF6B73F5" Offset="0" />
+        <GradientStop Color="#FF5865F2" Offset="0.5" />
+        <GradientStop Color="#FF4752C4" Offset="1" />
     </LinearGradientBrush>
 
     <LinearGradientBrush x:Key="Brush.SurfaceGradient" StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#FF15161B" Offset="0" />
-        <GradientStop Color="#FF0E0F13" Offset="1" />
+        <GradientStop Color="#FF313338" Offset="0" />
+        <GradientStop Color="#FF2B2D31" Offset="1" />
     </LinearGradientBrush>
 
 </ResourceDictionary>

@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="DiscordLyrics/Assets/banner.png" alt="Discord Lyrics" width="640" />
-
 # Discord Lyrics
 
 **A letra sincronizada da sua música, ao vivo no seu status do Discord.**

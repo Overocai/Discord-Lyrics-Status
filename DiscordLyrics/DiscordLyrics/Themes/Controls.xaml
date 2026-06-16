@@ -106,7 +106,7 @@
     <Style x:Key="Button.Close" TargetType="Button" BasedOn="{StaticResource Button.Caption}">
         <Style.Triggers>
             <Trigger Property="IsMouseOver" Value="True">
-                <Setter Property="Background" Value="{DynamicResource Brush.Red}" />
+                <Setter Property="Background" Value="{DynamicResource Brush.Danger}" />
                 <Setter Property="Foreground" Value="White" />
             </Trigger>
         </Style.Triggers>

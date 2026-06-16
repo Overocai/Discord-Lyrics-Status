@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="DiscordLyrics/Assets/banner.png" alt="Discord Lyrics" width="640" />
-
 # Discord Lyrics
 
 **Your song's synced lyrics, live on your Discord custom status.**

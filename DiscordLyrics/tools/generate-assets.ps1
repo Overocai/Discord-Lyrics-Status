@@ -6,12 +6,13 @@ $assets    = Join-Path $PSScriptRoot '..\DiscordLyrics\Assets'
 $installer = Join-Path $PSScriptRoot '..\DiscordLyrics\Installer'
 New-Item -ItemType Directory -Force -Path $assets, $installer | Out-Null
 
-$BLACK    = [System.Drawing.Color]::FromArgb(255, 7, 8, 10)
-$GRAPHITE = [System.Drawing.Color]::FromArgb(255, 32, 34, 41)
-$RED      = [System.Drawing.Color]::FromArgb(255, 229, 56, 59)
-$REDDARK  = [System.Drawing.Color]::FromArgb(255, 142, 23, 27)
+# Discord palette: graphite + blurple
+$BLACK    = [System.Drawing.Color]::FromArgb(255, 30, 31, 34)    # #1E1F22
+$GRAPHITE = [System.Drawing.Color]::FromArgb(255, 43, 45, 49)    # #2B2D31
+$RED      = [System.Drawing.Color]::FromArgb(255, 88, 101, 242)  # blurple #5865F2
+$REDDARK  = [System.Drawing.Color]::FromArgb(255, 71, 82, 196)   # #4752C4
 $WHITE    = [System.Drawing.Color]::White
-$TEXTSUB  = [System.Drawing.Color]::FromArgb(255, 160, 163, 173)
+$TEXTSUB  = [System.Drawing.Color]::FromArgb(255, 181, 186, 193) # #B5BAC1
 
 function New-Note {
     param([System.Drawing.Graphics]$g, [single]$cx, [single]$cy, [single]$scale, [System.Drawing.Color]$color)
