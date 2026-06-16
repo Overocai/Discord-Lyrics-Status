@@ -10,10 +10,6 @@ It reads the song straight from Windows' "now playing" (the same overlay you get
 with the volume keys), so it works with **Spotify, YouTube, browsers and more —
 no Spotify API or developer keys required.**
 
-<p align="center">
-  <img src="assets/screenshot.png" alt="Discord Lyrics Status app showing album art, song info, a progress bar and synced lyrics, with the matching Discord custom status on the left" width="480">
-</p>
-
 ---
 
 ## 🖥️ The interface

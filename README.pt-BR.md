@@ -11,10 +11,6 @@ Ele lê a música direto do "tocando agora" do Windows (aquele overlay que apare
 com as teclas de volume), então funciona com **Spotify, YouTube, navegadores e
 mais — sem precisar de API do Spotify nem chaves de desenvolvedor.**
 
-<p align="center">
-  <img src="assets/screenshot.png" alt="App Discord Lyrics Status mostrando capa do álbum, info da música, barra de progresso e letra sincronizada, com o status do Discord correspondente à esquerda" width="480">
-</p>
-
 ---
 
 ## 🖥️ A interface
