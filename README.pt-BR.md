@@ -93,10 +93,13 @@ git clone https://github.com/Overocai/Discord-Lyrics-Status.git
 cd Discord-Lyrics-Status
 ```
 
-**Instale as dependências.** No Windows, o jeito mais fácil é só dar **dois
-cliques no `install.bat`** — ele roda o `pip install -r requirements.txt` pra
-você e dá uma pausa no final pra você ler o resultado. Prefere o terminal? Faça
-na mão:
+**Instale tudo.** No Windows, o jeito mais fácil é só dar **dois cliques no
+`install.bat`**. Ele verifica se o **Python** está instalado e, se não estiver,
+**baixa e instala ele pra você automaticamente** (pelo `winget`, ou o instalador
+oficial como alternativa) — depois roda o `pip install -r requirements.txt` e dá
+uma pausa no final pra você ler o resultado. Se ele teve que instalar o Python, é
+só fechar a janela e dar dois cliques no `install.bat` mais uma vez. Prefere o
+terminal? Faça na mão:
 
 ```bash
 pip install -r requirements.txt
