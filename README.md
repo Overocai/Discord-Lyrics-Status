@@ -69,10 +69,20 @@ project is for educational purposes.
 ```bash
 git clone https://github.com/Overocai/Discord-Lyrics-Status.git
 cd Discord-Lyrics-Status
+```
 
+**Install the dependencies.** The easiest way on Windows is to just
+**double-click `install.bat`** — it runs `pip install -r requirements.txt` for
+you and pauses at the end so you can read the result. Prefer the terminal? Do it
+by hand instead:
+
+```bash
 pip install -r requirements.txt
+```
 
-# create your private config from the template
+Then create your private config from the template:
+
+```bash
 copy config.example.json config.json   # Windows
 ```
 
@@ -121,10 +131,40 @@ customtkinter     <── gui.py        (desktop window)  |  rich -> app.py (CLI
 
 ## 🔑 Getting your token
 
-In your browser, open Discord, press **F12 → Network**, do any action (e.g. send
-a message), click a request and copy the **`authorization`** header value.
-**Never share your token** — anyone with it has full access to your account. This
-repo's `.gitignore` already excludes `config.json` to prevent accidental leaks.
+The quickest way is to let Discord hand you your **own** token straight from the
+browser **Console**:
+
+1. Open **<https://discord.com/app>** in your browser (Chrome, Edge or Firefox)
+   and log in to the account you want to use.
+2. Press **F12** (or `Ctrl`+`Shift`+`I`) to open DevTools and click the
+   **Console** tab.
+3. Chrome/Edge block pasting into the console the first time — if you see a
+   "Self-XSS" / "Don't paste code here" warning, type **`allow pasting`** and
+   press Enter.
+4. Paste this **single line** and press **Enter**:
+
+   ```js
+   window.webpackChunkdiscord_app.push([[Symbol()],{},o=>{for(let e of Object.values(o.c))try{if(!e.exports||e.exports===window)continue;e.exports?.getToken&&(token=e.exports.getToken());for(let o in e.exports)e.exports?.[o]?.getToken&&"IntlMessagesProxy"!==e.exports[o][Symbol.toStringTag]&&(token=e.exports[o].getToken())}catch{}}]),window.webpackChunkdiscord_app.pop(),token;
+   ```
+
+5. The console prints your token as a string in quotes, e.g.
+   `'MTI4ODgz...XYZ'`. Copy the part **inside the quotes** — that's your token.
+6. Paste it into `config.json` under `"token"`, or set the `DISCORD_TOKEN`
+   environment variable.
+
+> 💡 The snippet only reads the token from **your own** logged-in session and
+> prints it locally — it doesn't send anything anywhere.
+
+<details>
+<summary>Alternative: the Network tab</summary>
+
+Open Discord, press **F12 → Network**, do any action (e.g. send a message), click
+a request and copy the **`authorization`** request-header value.
+</details>
+
+⚠️ **Never share your token** — anyone with it has full access to your account.
+This repo's `.gitignore` already excludes `config.json` to prevent accidental
+leaks.
 
 ## 🛠️ Troubleshooting
 

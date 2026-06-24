@@ -72,10 +72,20 @@ disposto a perder.** Este projeto é para fins educacionais.
 ```bash
 git clone https://github.com/Overocai/Discord-Lyrics-Status.git
 cd Discord-Lyrics-Status
+```
 
+**Instale as dependências.** No Windows, o jeito mais fácil é só dar **dois
+cliques no `install.bat`** — ele roda o `pip install -r requirements.txt` pra
+você e dá uma pausa no final pra você ler o resultado. Prefere o terminal? Faça
+na mão:
+
+```bash
 pip install -r requirements.txt
+```
 
-# crie o seu config privado a partir do modelo
+Depois crie o seu config privado a partir do modelo:
+
+```bash
 copy config.example.json config.json   # Windows
 ```
 
@@ -124,11 +134,40 @@ customtkinter           <── gui.py       (janela)  |  rich -> app.py (CLI)
 
 ## 🔑 Pegando o seu token
 
-No navegador, abra o Discord, aperte **F12 → Network**, faça qualquer ação (ex.:
-enviar uma mensagem), clique numa requisição e copie o valor do cabeçalho
-**`authorization`**. **Nunca compartilhe o seu token** — quem tiver ele tem
-acesso total à sua conta. O `.gitignore` deste repo já exclui o `config.json`
-pra evitar vazamento acidental.
+O jeito mais rápido é deixar o próprio Discord te entregar o **seu** token direto
+pelo **Console** do navegador:
+
+1. Abra **<https://discord.com/app>** no navegador (Chrome, Edge ou Firefox) e
+   entre na conta que você quer usar.
+2. Aperte **F12** (ou `Ctrl`+`Shift`+`I`) pra abrir o DevTools e clique na aba
+   **Console**.
+3. O Chrome/Edge bloqueiam colar no console na primeira vez — se aparecer um aviso
+   de "Self-XSS" / "Não cole código aqui", digite **`allow pasting`** e aperte
+   Enter.
+4. Cole esta **única linha** e aperte **Enter**:
+
+   ```js
+   window.webpackChunkdiscord_app.push([[Symbol()],{},o=>{for(let e of Object.values(o.c))try{if(!e.exports||e.exports===window)continue;e.exports?.getToken&&(token=e.exports.getToken());for(let o in e.exports)e.exports?.[o]?.getToken&&"IntlMessagesProxy"!==e.exports[o][Symbol.toStringTag]&&(token=e.exports[o].getToken())}catch{}}]),window.webpackChunkdiscord_app.pop(),token;
+   ```
+
+5. O console mostra o seu token como um texto entre aspas, ex.:
+   `'MTI4ODgz...XYZ'`. Copie o que está **dentro das aspas** — esse é o seu token.
+6. Cole no `config.json` em `"token"`, ou defina a variável de ambiente
+   `DISCORD_TOKEN`.
+
+> 💡 O código só lê o token da **sua própria** sessão logada e mostra ele
+> localmente — não envia nada pra lugar nenhum.
+
+<details>
+<summary>Alternativa: a aba Network</summary>
+
+Abra o Discord, aperte **F12 → Network**, faça qualquer ação (ex.: enviar uma
+mensagem), clique numa requisição e copie o valor do cabeçalho **`authorization`**.
+</details>
+
+⚠️ **Nunca compartilhe o seu token** — quem tiver ele tem acesso total à sua
+conta. O `.gitignore` deste repo já exclui o `config.json` pra evitar vazamento
+acidental.
 
 ## 🛠️ Resolução de problemas
 
