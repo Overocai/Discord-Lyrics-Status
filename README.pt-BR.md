@@ -11,6 +11,25 @@ Ele lê a música direto do "tocando agora" do Windows (aquele overlay que apare
 com as teclas de volume), então funciona com **Spotify, YouTube, navegadores e
 mais — sem precisar de API do Spotify nem chaves de desenvolvedor.**
 
+> [!WARNING]
+> **Veio atrás do instalador / app de desktop? Lê isso aqui.**
+> Este projeto tinha um **app de desktop separado em C# / .NET 9 / WPF** junto com
+> um instalador `.exe` de um clique (a antiga release **`v1.0.0`**). **Ele foi
+> removido**, e a release e a tag dele também.
+>
+> **Por que sumiu:** no uso real ele era simplesmente **pesado e lento demais**.
+> Demorava vários segundos pra abrir, carregava toda a bagagem do **runtime do
+> .NET + instalador** só pra mudar um status personalizado, usava bastante memória
+> e — pior de tudo — tinha um **delay absurdo**: um atraso bem perceptível entre a
+> música realmente avançar e o status/letra acompanharem, então a letra vivia fora
+> de sincronia. Não valia a pena pra o que a ferramenta faz.
+>
+> **O que você tem no lugar:** agora o projeto é **só a versão leve em Python**
+> deste repositório. Abre na hora, checa a música várias vezes por segundo e mantém
+> a letra bem sincronizada, quase sem atraso — sem instalador, sem runtime pra
+> instalar, sem peso rodando em segundo plano. É só seguir os passos de
+> **Instalação** abaixo.
+
 ---
 
 ## 🖥️ A interface

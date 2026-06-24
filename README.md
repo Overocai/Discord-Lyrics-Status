@@ -10,6 +10,25 @@ It reads the song straight from Windows' "now playing" (the same overlay you get
 with the volume keys), so it works with **Spotify, YouTube, browsers and more —
 no Spotify API or developer keys required.**
 
+> [!WARNING]
+> **Came here for the installer / desktop app? Please read this.**
+> This project used to ship a separate **C# / .NET 9 / WPF desktop app** bundled
+> with a one-click `.exe` installer (the old **`v1.0.0`** release). **It has been
+> removed**, and so have that release and its git tag.
+>
+> **Why it's gone:** in real use it was simply **too heavy and too slow**. It had
+> a multi-second cold start, dragged in the whole **.NET runtime + installer**
+> baggage just to set a custom status, used a lot of memory, and — worst of all —
+> had an **absurd delay**: a clearly noticeable lag between the song actually
+> advancing and the status/lyrics catching up, so the lyrics were constantly out
+> of sync. Not worth it for what the tool does.
+>
+> **What you get instead:** the project is now **only the lightweight Python
+> version** in this repo. It starts instantly, polls the music several times a
+> second, and keeps the lyrics tightly in sync with almost no lag — no installer,
+> no runtime to install, no background bloat. Just follow the **Setup** steps
+> below.
+
 ---
 
 ## 🖥️ The interface
